@@ -365,24 +365,19 @@ contract.
 ## 🚀 System Operation
 
 ### 1. Election Creation
-
 The administrator creates an election and provides the required election
 information.
 
 ### 2. Candidate Registration
-
 The administrator adds candidates who will participate in the election.
 
 ### 3. Voter Registration
-
 Eligible voters are registered using their blockchain wallet addresses.
 
 ### 4. Wallet Connection
-
 A voter opens the application and connects their MetaMask wallet.
 
 ### 5. Voter Verification
-
 The smart contract checks whether:
 
 -   The wallet is registered.
@@ -390,17 +385,14 @@ The smart contract checks whether:
 -   The election is currently active.
 
 ### 6. Vote Submission
-
 The voter selects a candidate and submits the vote.
 
 MetaMask generates and authorizes the blockchain transaction.
 
 ### 7. Smart Contract Processing
-
 The smart contract validates the vote and records it on the blockchain.
 
 ### 8. Results
-
 After the election ends, the application retrieves vote counts from the
 smart contract and displays the results.
 
