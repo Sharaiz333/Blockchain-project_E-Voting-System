@@ -272,15 +272,15 @@ The application consists of three main layers:
 
 ## 🛠️ Technology Stack
 
-  Technology       Purpose
-  ---------------- ----------------------------------------------
-  **Solidity**     Smart contract development
-  **Ethereum**     Blockchain platform
-  **MetaMask**     Digital wallet and transaction authorization
-  **Ethers.js**    Frontend-to-smart-contract communication
-  **HTML**         Web page structure
-  **CSS**          User interface styling
-  **JavaScript**   Frontend functionality
+| *Technology* | *Purpose* |
+|---|---|
+| **Solidity** | Smart contract development |
+| **Ethereum** | Blockchain platform |
+| **MetaMask** | Digital wallet and transaction authorization |
+| **Ethers.js** | Frontend-to-smart-contract communication |
+| **HTML** | Web page structure |
+| **CSS** | User interface styling |
+| **JavaScript** | Frontend functionality |
 
 ------------------------------------------------------------------------
 
