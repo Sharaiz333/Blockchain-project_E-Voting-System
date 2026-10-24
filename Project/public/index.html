@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14355f">
+  <title>Riphah International University | Blockchain Voting Portal</title>
+  <link rel="icon" href="riphah-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="Riphah International University voting portal home">
+        <img class="brand-logo" src="riphah-logo.png" alt="Riphah International University logo" width="56" height="56">
+        <span class="brand-copy">
+          <strong>Riphah International University</strong>
+          <small>Blockchain Voting Portal</small>
+        </span>
+      </a>
+      <div class="header-actions">
+        <div class="network-status" id="networkStatus" aria-live="polite">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="connectionStatus">Wallet not connected</span>
+        </div>
+        <button id="connectButton" class="button button-primary">Connect wallet</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="page-shell">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <p class="hero-tag">University elections</p>
+        <h1>Vote once. Verify forever.</h1>
+        <p class="hero-lead">Cast your ballot in Riphah student elections and see every result recorded openly on the blockchain.</p>
+        <div class="hero-cta">
+          <a class="button button-gold" href="#vote">Cast your vote</a>
+          <a class="button button-ghost" href="#elections">View elections</a>
+        </div>
+      </div>
+
+      <div class="hero-arch" aria-label="Voting principles">
+        <div class="arch-inner">
+          <img src="riphah-logo.png" alt="" width="150" height="150" class="arch-logo">
+          <ul class="principles">
+            <li><span class="tick" aria-hidden="true">✓</span><div><strong>Eligibility checked</strong><small>The smart contract confirms your department.</small></div></li>
+            <li><span class="tick" aria-hidden="true">✓</span><div><strong>One wallet, one vote</strong><small>Repeat votes are rejected automatically.</small></div></li>
+            <li><span class="tick" aria-hidden="true">✓</span><div><strong>Results anyone can check</strong><small>Totals are read straight from the blockchain.</small></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRESS: shows where the user is in the process (visibility of system status) -->
+    <ol class="steps" aria-label="How voting works">
+      <li class="step" id="stepConnect"><span class="step-num">1</span><span><strong>Connect</strong><small>Link your MetaMask wallet</small></span></li>
+      <li class="step"><span class="step-num">2</span><span><strong>Choose</strong><small>Pick an election and candidate</small></span></li>
+      <li class="step"><span class="step-num">3</span><span><strong>Confirm</strong><small>Approve the transaction</small></span></li>
+      <li class="step"><span class="step-num">4</span><span><strong>Verify</strong><small>Check the live results</small></span></li>
+    </ol>
+
+    <div id="notice" class="notice hidden" role="status" aria-live="polite"></div>
+
+    <nav class="section-nav" aria-label="Page sections">
+      <a href="#elections">Elections</a>
+      <a href="#vote">Cast vote</a>
+      <a href="#results">Results &amp; insights</a>
+      <a href="#admin">Administration</a>
+      <a href="#team">Project team</a>
+    </nav>
+
+    <!-- ELECTIONS -->
+    <section id="elections" class="content-section">
+      <div class="section-heading">
+        <div>
+          <h2>Available elections</h2>
+          <p>Check the status and eligible department before you vote.</p>
+        </div>
+        <button id="refreshButton" class="button button-outline"><span aria-hidden="true">↻</span> Refresh list</button>
+      </div>
+      <div id="electionList" class="election-grid">
+        <div class="empty-state">Connect your wallet, then select Refresh list to load elections.</div>
+      </div>
+    </section>
+
+    <!-- VOTE -->
+    <section id="vote" class="content-section">
+      <div class="section-heading">
+        <div>
+          <h2>Cast your vote</h2>
+          <p>Choose an election and a candidate, then review before you submit.</p>
+        </div>
+      </div>
+      <div class="vote-layout">
+        <div class="vote-card">
+          <div class="card-heading">
+            <span class="step-icon" aria-hidden="true">1</span>
+            <div><h3>Your ballot</h3><p>Only your registered department can vote.</p></div>
+          </div>
+          <label for="voteElection">Election</label>
+          <select id="voteElection"><option value="">Select an election</option></select>
+          <label for="candidateSelect">Candidate</label>
+          <select id="candidateSelect"><option value="">Select a candidate</option></select>
+          <div class="helper-note"><span aria-hidden="true">ⓘ</span> Your wallet must be registered by the administrator and match the election’s eligible department.</div>
+          <button id="voteButton" class="button button-primary button-wide">Submit vote</button>
+          <p class="transaction-note">MetaMask will ask you to confirm the transaction.</p>
+        </div>
+        <aside class="vote-aside">
+          <span class="aside-symbol" aria-hidden="true">!</span>
+          <h3>Check before you submit</h3>
+          <ul>
+            <li>The correct wallet is connected.</li>
+            <li>The election and candidate are right.</li>
+            <li>A confirmed vote can’t be changed in this prototype.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="results" class="content-section">
+      <div class="section-heading">
+        <div>
+          <h2>Results &amp; insights</h2>
+          <p>See candidate vote counts and a plain-language summary of the result.</p>
+        </div>
+      </div>
+      <div class="results-layout">
+        <div class="surface-card">
+          <div class="card-heading results-heading">
+            <div><h3>Election results</h3><p>Counts come from the deployed smart contract.</p></div>
+          </div>
+          <label for="resultsElection">Select election</label>
+          <select id="resultsElection"><option value="">Select an election</option></select>
+          <div id="resultsArea" class="empty-state">Choose an election to see its results.</div>
+        </div>
+        <div class="surface-card insight-card">
+          <div class="insight-title">
+            <span class="insight-mark" aria-hidden="true">AI</span>
+            <div><h3>Election insights</h3><p class="insight-sub">Automatic summary</p></div>
+          </div>
+          <p class="insight-intro">A lightweight analysis of the recorded vote distribution.</p>
+          <div id="analysisArea" class="analysis-content">The summary appears once results are loaded.</div>
+          <div class="privacy-note"><span aria-hidden="true">🔒</span> Analysis runs in your browser. No voter identity is sent to an AI service.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="admin" class="content-section admin-section">
+      <div class="section-heading">
+        <div>
+          <h2>Administration</h2>
+          <p>Only the wallet that deployed the smart contract can use these tools.</p>
+        </div>
+        <span class="admin-label"><span aria-hidden="true">🔑</span> Admin wallet required</span>
+      </div>
+      <div class="admin-grid">
+        <details class="admin-card" open>
+          <summary><span class="admin-step">1</span><span class="summary-copy"><strong>Create an election</strong><small>Set the title, department and deadline.</small></span><span class="summary-plus" aria-hidden="true">+</span></summary>
+          <form id="createElectionForm" class="form-content">
+            <label for="electionTitle">Election title</label>
+            <input id="electionTitle" required placeholder="FC Department Class Representative">
+            <label for="departmentCode">Eligible department code</label>
+            <input id="departmentCode" required placeholder="FC" maxlength="20">
+            <label for="endDate">Voting ends at (local time)</label>
+            <input id="endDate" required type="datetime-local">
+            <button class="button button-primary" type="submit">Create election</button>
+          </form>
+        </details>
+
+        <details class="admin-card">
+          <summary><span class="admin-step">2</span><span class="summary-copy"><strong>Add a candidate</strong><small>Add someone to an existing election.</small></span><span class="summary-plus" aria-hidden="true">+</span></summary>
+          <form id="addCandidateForm" class="form-content">
+            <label for="adminElection">Election</label>
+            <select id="adminElection" required><option value="">Select an election</option></select>
+            <label for="candidateName">Candidate name</label>
+            <input id="candidateName" required placeholder="Enter candidate name">
+            <button class="button button-primary" type="submit">Add candidate</button>
+          </form>
+        </details>
+
+        <details class="admin-card">
+          <summary><span class="admin-step">3</span><span class="summary-copy"><strong>Register a voter</strong><small>Link a student wallet to a department.</small></span><span class="summary-plus" aria-hidden="true">+</span></summary>
+          <form id="registerVoterForm" class="form-content">
+            <label for="voterAddress">Student wallet address</label>
+            <input id="voterAddress" required placeholder="0x..." autocomplete="off">
+            <label for="voterDepartment">Student department code</label>
+            <input id="voterDepartment" required placeholder="FC" maxlength="20">
+            <p class="form-hint">Use the same department code as the election to grant eligibility.</p>
+            <button class="button button-primary" type="submit">Register voter</button>
+          </form>
+        </details>
+      </div>
+    </section>
+
+    <!-- TEAM / CREDENTIALS -->
+    <section id="team" class="content-section team-section">
+      <div class="section-heading">
+        <div>
+          <h2>Project team</h2>
+          <p>Designed and developed as a BSCS 7-1 semester project at Riphah International University.</p>
+        </div>
+      </div>
+      <div class="team-grid">
+        <article class="team-card">
+          <span class="avatar" aria-hidden="true">SA</span>
+          <div>
+            <h3>Sharaiz Ahmed</h3>
+            <p class="team-id">SAP ID 57288</p>
+            <p class="team-class">BSCS 7-1</p>
+          </div>
+        </article>
+        <article class="team-card">
+          <span class="avatar" aria-hidden="true">AM</span>
+          <div>
+            <h3>Abdul Moiz</h3>
+            <p class="team-id">SAP ID 54482</p>
+            <p class="team-class">BSCS 7-1</p>
+          </div>
+        </article>
+        <article class="team-card">
+          <span class="avatar" aria-hidden="true">NM</span>
+          <div>
+            <h3>Nouman Mohsin</h3>
+            <p class="team-id">SAP ID 52963</p>
+            <p class="team-class">BSCS 7-1</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="riphah-logo.png" alt="" width="52" height="52" class="footer-logo">
+        <span><strong>Riphah International University</strong><small>Blockchain Voting Portal</small></span>
+      </div>
+      <div class="footer-credits">
+        <p><strong>Sharaiz Ahmed (57288)</strong></p>
+        <p><strong>Abdul Moiz (54482)</strong></p>
+        <p><strong>Nouman Mohsin (52963)</strong></p>
+        <p>BSCS 7-1</p>
+      </div>
+      <p class="footer-disclaimer">Educational prototype. Not for real or confidential elections.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // Purely visual helpers; they never touch app.js logic.
+    (function () {
+      var status = document.getElementById('connectionStatus');
+      var net = document.getElementById('networkStatus');
+      var step = document.getElementById('stepConnect');
+      function sync() {
+        var t = (status.textContent || '').toLowerCase();
+        var on = t.indexOf('not connected') === -1 && (t.indexOf('connected') !== -1 || t.indexOf('0x') !== -1);
+        net.classList.toggle('connected', on);
+        step.classList.toggle('done', on);
+      }
+      new MutationObserver(sync).observe(status, { childList: true, characterData: true, subtree: true });
+      sync();
+
+      // Highlight the current section in the nav (orientation cue).
+      var links = document.querySelectorAll('.section-nav a');
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              links.forEach(function (a) {
+                a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+              });
+            }
+          });
+        }, { rootMargin: '-35% 0px -55% 0px' });
+        document.querySelectorAll('.content-section').forEach(function (s) { io.observe(s); });
+      }
+    })();
+  </script>
+</body>
+</html>
